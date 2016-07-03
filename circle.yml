@@ -1,0 +1,14 @@
+machine:
+  services:
+    - docker
+dependencies:
+  cache_directories:
+    - "~/openapphack-docker-ubuntu"
+  override:
+    - docker info
+    - if [[ -e ~/openapphack-docker-ubuntu/image.tar ]]; then docker load --input ~/openapphack-docker-ubuntu/image.tar; fi
+    - docker build -t openapphack/ubuntu-xenial .
+    - mkdir -p ~/openapphack-docker-ubuntu; docker save --output ~/openapphack-docker-ubuntu/image.tar openapphack/ubuntu-xenial
+test:
+  override:
+    - docker run -it openapphack/ubuntu-xenial echo "Hello World"
